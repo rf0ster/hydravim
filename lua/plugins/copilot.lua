@@ -1,5 +1,3 @@
-local v = {
+ return  {
 	'github/copilot.vim'
 }
-
-return {}

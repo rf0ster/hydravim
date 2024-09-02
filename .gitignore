@@ -1,0 +1,23 @@
+# Ignore all .log files
+*.log
+
+# Ignore local test directory
+dotnet_test/
+
+# Ignore node_modules directory
+node_modules/
+
+# Ignore compiled output (Java, C++, etc.)
+*.class
+*.o
+*.so
+*.dll
+*.exe
+
+# Ignore temporary files
+*.tmp
+*.swp
+
+# Ignore system files
+.DS_Store
+Thumbs.db

@@ -10,7 +10,7 @@ return {
 					terminal_colors = false,
 					cache = false,
 					theme = {
-							variant = "auto",
+							variant = "dark",
 					},
 
 					-- Disable or enable colorscheme extensions
@@ -18,7 +18,7 @@ return {
 							telescope = true,
 							notify = true,
 							mini = true,
-							-- cmp = true,
+							cmp = true,
 							treesitter = true,
 							noice = true
 					},
