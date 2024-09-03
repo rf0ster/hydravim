@@ -36,8 +36,8 @@ local settings = {
             { "󰍉 Find Word", "Telescope live_grep", "<leader>fg" },
             { " Plugins", "Lazy", "<leader>l" },
             { " LSP", "Mason", "<leader>m" },
-						{ "󰘐 Dotnet", "lua if not require('dotnet').close() then require('dotnet').open() end", "<leader>d" },
-						{ "󰘐 Quit", "q!<CR>", "<leader>q" }
+            { "󰘐 Dotnet", "lua require('dotnet').project_viewer()", "<leader>dp" },
+            { "󰘐 Quit", "q!<CR>", "<leader>q" }
         },
         highlight = "String",
         default_color = "",

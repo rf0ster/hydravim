@@ -3,7 +3,6 @@ return {
 	lazy = true,
 	config = function()
 		require('toggleterm').setup({
-			shell = 'nu.exe',
 			direction = 'float',
 			float_opts = {
 				border = 'rounded',
