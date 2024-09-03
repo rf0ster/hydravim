@@ -8,11 +8,11 @@ local buffer = require('view.buffer')
 local solution_info = nil
 
 -- Helper function to run a shell command and capture the output
-local function run_command(cmd)
+local function shell_command(cmd)
     local handle = io.popen(cmd)
-		if handle == nil then
-			return nil
-		end
+    if handle == nil then
+        return nil
+    end
 
     local result = handle:read("*a")
     handle:close()
@@ -41,10 +41,10 @@ end
 -- Helper function to cache projects in the solution
 local function cache_projects(solution_file)
     local cmd = "dotnet sln " .. solution_file .. " list"
-    local result = run_command(cmd)
-		if result == nil then
-			return {}
-		end
+    local result = shell_command(cmd)
+    if result == nil then
+        return {}
+    end
 
     local projects = {}
     for project in result:gmatch("[^\r\n]+") do
@@ -61,9 +61,7 @@ end
 
 -- Set or get the solution information
 function M.get_solution(sln_file)
-    if not sln_file then
-        sln_file = locate_solution_file()
-    end
+    sln_file = sln_file or locate_solution_file()
     if not sln_file then
         return nil
     end
@@ -78,9 +76,7 @@ end
 
 -- Get all projects in the solution
 function M.get_projects()
-    if not solution_info then
-        M.get_solution()
-    end
+    solution_info = solution_info or M.get_solution()
     if solution_info == nil then
         return {}
     end
@@ -108,9 +104,7 @@ local function float_cmd(cmd)
 end
 
 local function dotnet_cmd(cmd, project)
-    if not solution_info then
-        M.get_solution()
-    end
+    solution_info = solution_info or M.get_solution()
     if not solution_info then
         return
     end
@@ -151,9 +145,7 @@ function M.build(project)
 end
 
 function M.project_viewer()
-    if not solution_info then
-        M.get_solution()
-    end
+    solution_info = solution_info or M.get_solution()
     if not solution_info then
         return
     end
@@ -201,9 +193,7 @@ function M.project_viewer()
 end
 
 function M.cmd_history()
-    if not solution_info then
-        M.get_solution()
-    end
+    solution_info = solution_info or M.get_solution()
     if not solution_info then
         return
     end
@@ -235,4 +225,5 @@ function M.cmd_history()
         maps = maps
     })
 end
+
 return M
