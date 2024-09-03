@@ -43,17 +43,17 @@ vim.keymap.set('n', '<C-t>', toggle_terminal, { noremap = true, silent = true })
 vim.keymap.set('t', '<C-t>', toggle_terminal, { noremap = true, silent = true })
 
 -- dotnet
-vim.keymap.set('n', '<leader>dv', ':lua require"dotnet".open()<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>db', ':lua require"dotnet".build()<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>dc', ':lua require"dotnet".clean()<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>dr', ':lua require"dotnet".restore()<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>dp', ':lua require"dotnet".project_viewer()<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>dl', ':lua require"dotnet".run_last_cmd()<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>dh', ':lua require"dotnet".cmd_history()<CR>', { noremap = true, silent = true })
 
 -- lspsaga
 vim.keymap.set('n', '<leader>t', ':Lspsaga finder<CR>', { noremap = true, silent = true })
 
--- Remaps, not sure if this is good practice, but nice to have for laptop where ctrl key is not remapped :(
+-- remaps, not sure if this is good practice, but nice to have for laptop where ctrl key is not remapped :(
 vim.keymap.set('n', '<leader>q', close_to_startup, { noremap = true, silent = true })
 
 vim.api.nvim_create_user_command('Q', function()

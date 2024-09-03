@@ -60,6 +60,9 @@ function M.create_float_cmd(cmd, opts)
 	require "view.buffer".run_command(buf, cmd)
 
 	local win = vim.api.nvim_open_win(buf, true, opts)
+    if opts.title then
+        vim.wo[win].statusline = opts.title
+    end
 	return {
 		win = win,
 		buf = buf

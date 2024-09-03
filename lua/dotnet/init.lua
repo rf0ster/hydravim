@@ -88,14 +88,23 @@ function M.get_projects()
 end
 
 local win_id = nil
-local last_cmd = nil
+local cmd_hist = {}
+
+local function close_win()
+    if win_id then
+        pcall(vim.api.nvim_win_close, win_id, true)
+        win_id = nil
+    end
+end
+
 local function float_cmd(cmd)
     print(cmd)
-    if win_id then
-         pcall(vim.api.nvim_win_close, win_id, true)
-    end
-    win_id = window.create_float_cmd(cmd, window.win_float_opts(0.7, 0.7)).win
-    last_cmd = cmd
+    close_win()
+
+    local opts = window.win_float_opts(0.7, 0.7)
+    opts.title = "Output"
+    win_id = window.create_float_cmd(cmd, opts).win
+    table.insert(cmd_hist, cmd)
 end
 
 local function dotnet_cmd(cmd, project)
@@ -124,8 +133,8 @@ local function dotnet_cmd(cmd, project)
 end
 
 function M.run_last_cmd()
-    if last_cmd then
-        float_cmd(last_cmd)
+    if #cmd_hist > 0 then
+        float_cmd(cmd_hist[#cmd_hist])
     end
 end
 
@@ -148,6 +157,7 @@ function M.project_viewer()
     if not solution_info then
         return
     end
+    close_win()
 
     local viewer = require('dotnet.viewer')
     local items = {}
@@ -186,6 +196,42 @@ function M.project_viewer()
     viewer.viewer({
         prompt_title = "Project Viewer",
         items = items,
+        maps = maps
+    })
+end
+
+function M.cmd_history()
+    if not solution_info then
+        M.get_solution()
+    end
+    if not solution_info then
+        return
+    end
+    close_win()
+
+    local viewer = require('dotnet.viewer')
+    local actions_state = require('telescope.actions.state')
+    local run_cmd = function()
+        local selection = actions_state.get_selected_entry()
+        float_cmd(selection[1])
+    end
+
+    local maps = {
+        {
+            mode = 'i',
+            key = '<CR>',
+            fn = run_cmd
+        },
+        {
+            mode = 'n',
+            key = '<CR>',
+            fn = run_cmd
+        }
+    }
+
+    viewer.viewer({
+        prompt_title = "History",
+        items = cmd_hist,
         maps = maps
     })
 end
