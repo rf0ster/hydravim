@@ -100,7 +100,7 @@ local function float_cmd(cmd)
     local opts = window.win_float_opts(0.7, 0.7)
     opts.title = "Output"
     win_id = window.create_float_cmd(cmd, opts).win
-    table.insert(cmd_hist, cmd)
+    table.insert(cmd_hist, 1, cmd)
 end
 
 local function dotnet_cmd(cmd, project)
@@ -128,7 +128,7 @@ end
 
 function M.run_last_cmd()
     if #cmd_hist > 0 then
-        float_cmd(cmd_hist[#cmd_hist])
+        float_cmd(cmd_hist[1])
     end
 end
 
