@@ -3,6 +3,7 @@
 
 # Ignore local test directory
 dotnet_test/
+go_test/
 
 # Ignore node_modules directory
 node_modules/

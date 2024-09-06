@@ -23,7 +23,12 @@ end
 function M.run_command(buf, command)
     local function on_output(_, data, _)
         if data then
-            M.append(buf, data)
+            for _, line in ipairs(data) do
+                if line ~= "" then
+                    line = " " .. line
+                end
+                M.append(buf, {line})
+            end
         end
     end
 
@@ -33,22 +38,6 @@ function M.run_command(buf, command)
         stdout_buffered = false,
         stderr_buffered = false,
     })
-end
-
-function M.pad(bufnr, left_padding, right_padding)
-    local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-    local padded_lines = {}
-
-    for _, line in ipairs(lines) do
-        if #line > 0 then
-            local padded_line = string.rep(" ", left_padding) .. line .. string.rep(" ", right_padding)
-            table.insert(padded_lines, padded_line)
-        else
-            table.insert(padded_lines, line)
-        end
-    end
-
-    vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, padded_lines)
 end
 
 function M.disable_editing(buf)

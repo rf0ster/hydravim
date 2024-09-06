@@ -61,6 +61,10 @@ end
 
 -- Set or get the solution information
 function M.get_solution(sln_file)
+    if solution_info then
+        return solution_info
+    end
+
     sln_file = sln_file or locate_solution_file()
     if not sln_file then
         return nil
@@ -144,6 +148,35 @@ function M.build(project)
     dotnet_cmd("dotnet build", project)
 end
 
+function M.remove(project)
+    solution_info = solution_info or M.get_solution()
+    if not solution_info then
+        return
+    end
+
+    if not project then
+        local bufnr = vim.api.nvim_get_current_buf()
+        local line = buffer.read_current_line(bufnr)
+        project = line:match("([^/\\]+%.csproj)$")
+    end
+
+    if project then
+        for _, proj in ipairs(solution_info.projects) do
+            if proj.name == project then
+                local cmd = "dotnet sln " .. solution_info.filePath .. " remove " .. proj.filePath
+                vim.fn.jobstart(cmd, {
+                    on_exit = function(_, exit_code, _)
+                        if exit_code ~= 0 then
+                            error("Project not removed from solution")
+                            return
+                        end
+                        print("Project removed from solution")
+                    end
+                })
+            end
+        end
+    end
+end
 function M.project_viewer()
     solution_info = solution_info or M.get_solution()
     if not solution_info then
@@ -181,6 +214,14 @@ function M.project_viewer()
             fn = function()
                 local selection = actions_state.get_selected_entry()
                 M.restore(selection[1])
+            end
+        },
+        {
+            mode = 'n',
+            key = 'd',
+            fn = function()
+                local selection = actions_state.get_selected_entry()
+                M.remove(selection[1])
             end
         }
     }

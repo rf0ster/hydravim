@@ -14,11 +14,34 @@ return {
 				}
 			})
 			require"mason-lspconfig".setup({
-				ensure_installed = { "lua_ls", "csharp_ls" }
+				ensure_installed = { "lua_ls", "csharp_ls", "gopls" }
 			})
 
 			local capabilities = require "cmp_nvim_lsp".default_capabilities()
 			require "lspconfig".csharp_ls.setup {}
+            require "lspconfig".gopls.setup {
+                capabilities = capabilities,
+                cmd = { "gopls" },
+                filetypes = { "go", "gomod" },
+                root_dir = require("lspconfig/util").root_pattern("go.work", "go.mod", ".git"),
+                settings = {
+                    gopls = {
+                        analyses = {
+                            unusedparams = true,
+                        },
+                        staticcheck = true,
+                    },
+                },
+                on_attach = function(client, bufnr)
+                    -- Key mappings and other LSP-specific configurations
+                    local opts = { noremap=true, silent=true }
+                    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+                    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+                    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+                    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+                    -- Additional LSP mappings can go here
+                end,
+            }
 			require "lspconfig".lua_ls.setup {
 				capabilities = capabilities,
 				settings = {

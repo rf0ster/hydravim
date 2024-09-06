@@ -49,6 +49,7 @@ vim.keymap.set('n', '<leader>dr', ':lua require"dotnet".restore()<CR>', { norema
 vim.keymap.set('n', '<leader>dp', ':lua require"dotnet".project_viewer()<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>dl', ':lua require"dotnet".run_last_cmd()<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>dh', ':lua require"dotnet".cmd_history()<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>ds', ':lua require"dotnet.solution".options()<CR>', { noremap = true, silent = true })
 
 -- lspsaga
 vim.keymap.set('n', '<leader>t', ':Lspsaga finder<CR>', { noremap = true, silent = true })

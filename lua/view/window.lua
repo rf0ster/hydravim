@@ -63,6 +63,8 @@ function M.create_float_cmd(cmd, opts)
     if opts.title then
         vim.wo[win].statusline = opts.title
     end
+    vim.wo[win].wrap = false
+
 	return {
 		win = win,
 		buf = buf
