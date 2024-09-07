@@ -39,16 +39,16 @@ function M.sln_remove(sln_file, project_file)
     return shell_command("dotnet sln " .. sln_file .. " remove " .. project_file)
 end
 
-function M.restore(file)
-    return shell_command("dotnet restore" .. add_target(file))
+function M.restore(target)
+    return shell_command("dotnet restore" .. add_target(target))
 end
 
-function M.build(file)
-    return shell_command("dotnet build" .. add_target(file))
+function M.build(target)
+    return shell_command("dotnet build" .. add_target(target))
 end
 
-function M.clean(file)
-    return shell_command("dotnet clean " .. add_target(file))
+function M.clean(target)
+    return shell_command("dotnet clean" .. add_target(target))
 end
 
 function M.new_classlib(name, output)
