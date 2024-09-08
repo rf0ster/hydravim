@@ -43,13 +43,13 @@ vim.keymap.set('n', '<C-t>', toggle_terminal, { noremap = true, silent = true })
 vim.keymap.set('t', '<C-t>', toggle_terminal, { noremap = true, silent = true })
 
 -- dotnet
-vim.keymap.set('n', '<leader>db', ':lua require"dotnet".build()<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>dc', ':lua require"dotnet".clean()<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>dr', ':lua require"dotnet".restore()<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>dp', ':lua require"dotnet".project_viewer()<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>dl', ':lua require"dotnet".run_last_cmd()<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>dh', ':lua require"dotnet".cmd_history()<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>ds', ':lua require"dotnet.solution".options()<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>db', ':lua require"dotnet.cli".build()<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>dc', ':lua require"dotnet.cli".clean()<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>dr', ':lua require"dotnet.cli".restore()<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>dh', ':lua require"dotnet.history".open()<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>dp', ':lua require"dotnet.projects".open()<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>ds', ':lua require"dotnet.solution".open()<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>dl', ':lua require"dotnet.history".run_last_cmd()<CR>', { noremap = true, silent = true })
 
 -- lspsaga
 vim.keymap.set('n', '<leader>t', ':Lspsaga finder<CR>', { noremap = true, silent = true })

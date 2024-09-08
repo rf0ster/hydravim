@@ -3,7 +3,7 @@ require("rfoster")
 vim.cmd("colorscheme cyberdream")
 
 local sln_name = function()
-    local sln_info = require("dotnet").get_solution()
+    local sln_info = require("dotnet2.solution").get()
     if sln_info then
         return sln_info.name
 	end

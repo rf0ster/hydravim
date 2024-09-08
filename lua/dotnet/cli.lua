@@ -3,6 +3,7 @@ local M = {}
 -- Helper function to run a shell command and capture the output
 local function shell_command(cmd)
     print(cmd)
+
     local handle = io.popen(cmd)
     if handle == nil then
         return nil
@@ -40,15 +41,15 @@ function M.sln_remove(sln_file, project_file)
 end
 
 function M.restore(target)
-    return shell_command("dotnet restore" .. add_target(target))
+    return require "dotnet.view".output("dotnet restore" .. add_target(target))
 end
 
 function M.build(target)
-    return shell_command("dotnet build" .. add_target(target))
+    return require "dotnet.view".output("dotnet build" .. add_target(target))
 end
 
 function M.clean(target)
-    return shell_command("dotnet clean" .. add_target(target))
+    return require "dotnet.view".output("dotnet clean" .. add_target(target))
 end
 
 function M.new_classlib(name, output)
