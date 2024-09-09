@@ -30,7 +30,9 @@ function M.output(cmd)
         row = row,
         col = col,
         style = "minimal",
-        border = "rounded"
+        border = "rounded",
+        title = "Output",
+        title_pos = "left",
     })
 
     vim.wo[window].statusline = "Output"

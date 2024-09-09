@@ -6,7 +6,7 @@ return {
     run = ":TSUpdate",
     config = function()
       require("nvim-treesitter.configs").setup {
-        ensure_installed = { "lua", "c_sharp" },
+        ensure_installed = { "lua", "c_sharp", "go" },
 				sync_install = true,
 				highlight = {
 					enable = true,

@@ -62,4 +62,19 @@ function M.new_console(name, output)
     return shell_command(cmd .. add_flag("-o", output))
 end
 
+function M.new_mstest(name, output)
+    local cmd = "dotnet new mstest -n " .. name
+    return shell_command(cmd .. add_flag("-o", output))
+end
+
+function M.new_web(name, output)
+    local cmd = "dotnet new web -n " .. name
+    return shell_command(cmd .. add_flag("-o", output))
+end
+
+function M.new_mvc(name, output)
+    local cmd = "dotnet new mvc -n " .. name
+    return shell_command(cmd .. add_flag("-o", output))
+end
+
 return M

@@ -1,8 +1,85 @@
-local M = {}
+local actions_state = require "telescope.actions.state"
+local actions = require "telescope.actions"
+local cli = require "dotnet.cli"
 
+local M = {}
 local sln_file
 local sln_name
 local projects = {}
+
+local function add_project(project_name)
+    cli.sln_add(sln_file, project_name .. "/" .. project_name .. ".csproj")
+    M.load(sln_file)
+    print("Add project")
+end
+
+local commands = {
+    {
+        name = "Build",
+        on_execute = function()
+            cli.build(sln_file)
+        end
+    },
+    {
+        name = "Clean",
+        on_execute = function()
+            cli.clean(sln_file)
+        end
+    },
+    {
+        name = "Restore",
+        on_execute = function()
+            cli.restore(sln_file)
+        end
+    },
+    {
+        name = "Add project",
+        on_execute = function()
+            print("Add project")
+        end
+    },
+    {
+        name = "New console",
+        on_execute = function()
+            local project_name = vim.fn.input("Project name: ")
+            cli.new_console(project_name)
+            add_project(project_name)
+        end
+    },
+    {
+        name = "New classlib",
+        on_execute = function()
+            local project_name = vim.fn.input("Project name: ")
+            cli.new_classlib(project_name)
+            add_project(project_name)
+        end
+    },
+    {
+        name = "New web",
+        on_execute = function()
+            local project_name = vim.fn.input("Project name: ")
+            cli.new_web(project_name)
+            add_project(project_name)
+        end
+    },
+    {
+        name = "New mvc",
+        on_execute = function()
+            local project_name = vim.fn.input("Project name: ")
+            cli.new_mvc(project_name)
+            add_project(project_name)
+        end
+    },
+    {
+        name = "New mstest",
+        on_execute = function()
+            local project_name = vim.fn.input("Project name: ")
+            cli.new_mstest(project_name)
+            add_project(project_name)
+        end
+    }
+}
+
 
 -- Helper function to locate the solution file in the current directory using plenary.scandir
 local function locate_file(match, depth)
@@ -52,11 +129,6 @@ function M.load(sln_file_path)
     end
 end
 
--- Reloads the solution file and cache the projects
-function M.reload()
-    M.load(sln_file)
-end
-
 -- Get the solution information
 function M.get()
     if not sln_file then
@@ -74,53 +146,36 @@ function M.get()
     }
 end
 
-function  M.open()
-    local actions_state = require "telescope.actions.state"
-    local solution = require "dotnet.solution"
-    local cli = require "dotnet.cli"
-
-    local sln = solution.get() or solution.load()
+function M.open()
+    local sln = M.get() or M.load()
     if not sln then
         return
+    end
+
+    local results = {}
+    for _, command in ipairs(commands) do
+        table.insert(results, command.name)
     end
 
     require "dotnet.view".picker({
         prompt_title = "Solution",
         finder = require "telescope.finders".new_table {
-            results = {
-                "Build",
-                "Clean",
-                "Restore",
-                "Add project",
-                "New console",
-                "New classlib",
-            }
+            results = results
         },
         attach_mappings = function(_, map)
-            map("n", "<CR>", function()
-                local selection = actions_state.get_selected_entry()
-                if selection.value == "Build" then
-                    cli.build(sln.file)
-                elseif selection.value == "Clean" then
-                    cli.clean(sln.file)
-                elseif selection.value == "Restore" then
-                    cli.restore(sln.file)
-                elseif selection.value == "Add project" then
-                    print("Add project")
-                elseif selection.value == "New console" then
-                    local project_name = vim.fn.input("Project name: ")
-                    cli.new_console(project_name)
-                    cli.sln_add(sln.file, project_name .. "/" .. project_name .. ".csproj")
-                    solution.reload()
-                elseif selection.value == "New classlib" then
-                    local project_name = vim.fn.input("Project name: ")
-                    cli.new_classlib(project_name)
-                    cli.sln_add(sln.file, project_name .. "/" .. project_name .. ".csproj")
-                    solution.reload()
+            map("n", "<CR>", function(prompt_bufnr)
+                local selection = actions_state.get_selected_entry().value
+                for _, command in ipairs(commands) do
+                    if command.name == selection then
+                        command.on_execute()
+                        break
+                    end
                 end
+                pcall(actions.close, prompt_bufnr)
             end)
             return true
         end
     })
 end
+
 return M

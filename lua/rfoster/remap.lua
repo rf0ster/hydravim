@@ -51,6 +51,11 @@ vim.keymap.set('n', '<leader>dp', ':lua require"dotnet.projects".open()<CR>', { 
 vim.keymap.set('n', '<leader>ds', ':lua require"dotnet.solution".open()<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>dl', ':lua require"dotnet.history".run_last_cmd()<CR>', { noremap = true, silent = true })
 
+-- recalling
+vim.keymap.set('n', '<leader>rr', ':Recall<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<tab>', ':RecallForward<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<s-tab>', ':RecallBack<CR>', { noremap = true, silent = true })
+
 -- lspsaga
 vim.keymap.set('n', '<leader>t', ':Lspsaga finder<CR>', { noremap = true, silent = true })
 
