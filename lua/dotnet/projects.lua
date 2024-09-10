@@ -23,12 +23,22 @@ function M.open()
     end
 
     local actions_state = require "telescope.actions.state"
+    local actions = require "telescope.actions"
     local cli = require "dotnet.cli"
 
     require "dotnet.view".picker({
         prompt_title = "Projects",
         items = projects,
         maps = {
+            {
+                mode = "n",
+                key = "<CR>",
+                fn = function (prompt_buffrn)
+                    local selection = actions_state.get_selected_entry()
+                    actions.close(prompt_buffrn)
+                    vim.api.nvim_command("e " .. project_file(selection.value))
+                end
+            },
             {
                 mode = "n",
                 key = "b",

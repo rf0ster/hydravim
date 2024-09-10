@@ -33,6 +33,12 @@ local commands = {
         end
     },
     {
+        name = "Test",
+        on_execute = function()
+            cli.mstest(sln_file)
+        end
+    },
+    {
         name = "Add project",
         on_execute = function()
             print("Add project")

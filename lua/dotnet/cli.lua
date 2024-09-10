@@ -52,6 +52,10 @@ function M.clean(target)
     return require "dotnet.view".output("dotnet clean" .. add_target(target))
 end
 
+function M.mstest(target)
+    return require "dotnet.view".output("dotnet test" .. add_target(target))
+end
+
 function M.new_classlib(name, output)
     local cmd = "dotnet new classlib -n " .. name
     return shell_command(cmd .. add_flag("-o", output))

@@ -23,7 +23,8 @@ function M.output(cmd)
 	local col = math.floor((vim.o.columns - width) / 2)
 
     local bufnr = vim.api.nvim_create_buf(false, true)
-    local window = vim.api.nvim_open_win(bufnr, true, {
+
+    local win = vim.api.nvim_open_win(bufnr, true, {
         relative = "editor",
         width = width,
         height = height,
@@ -35,24 +36,41 @@ function M.output(cmd)
         title_pos = "left",
     })
 
-    vim.wo[window].statusline = "Output"
-    vim.wo[window].wrap = false
-    set_view(window)
+    vim.wo[win].wrap = false
+    vim.wo[win].cursorline = false
+    vim.wo[win].cursorcolumn = false
+    vim.wo[win].statusline = "Output"
+    vim.wo[win].wrap = false
+    set_view(win)
 
     local function on_output(_, data, _)
         if data then
             for _, line in ipairs(data) do
                 if line ~= "" then
-                    line = " " .. line
+                    -- Replace carriage return (^M) with nothing
+                    -- Is this only on windows??
+                    line = string.gsub(line, "\r", "")
+                    -- Trim leading and trailing whitespace
+                    line = line:gsub("^%s+", ""):gsub("%s+$", "")
+                    -- Add indentation
+                    if line ~= " " and line ~= "" then
+                        line = " " .. line
+                    end
+                    vim.api.nvim_buf_set_lines(bufnr, -1, -1, false, {line})
                 end
-                vim.api.nvim_buf_set_lines(bufnr, -1, -1, false, {line})
             end
         end
+
+        local last_line = vim.api.nvim_buf_line_count(bufnr)
+        vim.api.nvim_win_set_cursor(0, {last_line, 0})
     end
 
     vim.fn.jobstart(cmd, {
         on_stdout = on_output,
         on_stderr = on_output,
+        on_exit = function()
+            vim.bo[bufnr].modifiable = false
+        end,
         stdout_buffered = false,
         stderr_buffered = false,
     })
