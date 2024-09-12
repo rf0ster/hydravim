@@ -31,7 +31,7 @@ function M.output(cmd)
         row = row,
         col = col,
         style = "minimal",
-        border = "rounded",
+        border = "double",
         title = "Output",
         title_pos = "left",
     })
@@ -46,7 +46,11 @@ function M.output(cmd)
     local function on_output(_, data, _)
         if data then
             for _, line in ipairs(data) do
-                if line ~= "" and line ~= " " then
+                if line:match("^%s*$") then
+                    line = ""
+                end
+
+                if line ~= "" then
                     -- Replace carriage return (^M) with nothing
                     -- Is this only on windows??
                     line = string.gsub(line, "\r", "")
@@ -85,6 +89,7 @@ function M.picker(opts)
     pickers.new(opts, {
         initial_mode = "normal",
         prompt_title = opts.prompt_title or "Viewer",
+        results_title = opts.results_title or "Results",
         finder = finders.new_table {
             results = opts.items or {},
         },

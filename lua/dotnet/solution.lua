@@ -6,11 +6,11 @@ local M = {}
 local sln_file
 local sln_name
 local projects = {}
+local projects_loaded = false
 
 local function add_project(project_name)
     cli.sln_add(sln_file, project_name .. "/" .. project_name .. ".csproj")
     M.load(sln_file)
-    print("Add project")
 end
 
 local commands = {
@@ -118,6 +118,7 @@ function M.load(sln_file_path)
         return
     end
 
+    projects_loaded = false
     sln_name = sln_file:match("([^/\\]+%.sln)$")
     projects = {}
 
@@ -133,6 +134,7 @@ function M.load(sln_file_path)
             end
         end
     end
+    projects_loaded = true
 end
 
 -- Get the solution information
@@ -148,7 +150,8 @@ function M.get()
     return {
         name = sln_name,
         file = sln_file,
-        projects = projects
+        projects = projects,
+        projects_loaded = projects_loaded
     }
 end
 
@@ -164,7 +167,8 @@ function M.open()
     end
 
     require "dotnet.view".picker({
-        prompt_title = "Solution",
+        prompt_title = sln.name,
+        results_title = "Options",
         finder = require "telescope.finders".new_table {
             results = results
         },

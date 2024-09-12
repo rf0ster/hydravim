@@ -2,8 +2,6 @@ local M = {}
 
 -- Helper function to run a shell command and capture the output
 local function shell_command(cmd)
-    print(cmd)
-
     local handle = io.popen(cmd)
     if handle == nil then
         return nil

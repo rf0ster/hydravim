@@ -7,6 +7,10 @@ function M.open()
         return
     end
 
+    if not sln.projects_loaded then
+        return
+    end
+
     local projects = {}
     for _, project in ipairs(sln.projects) do
         table.insert(projects, project.name)
@@ -27,7 +31,8 @@ function M.open()
     local cli = require "dotnet.cli"
 
     require "dotnet.view".picker({
-        prompt_title = "Projects",
+        prompt_title = sln.name,
+        results_title = "Projects",
         items = projects,
         maps = {
             {
@@ -68,8 +73,17 @@ function M.open()
                 key = "d",
                 fn = function()
                     local selection = actions_state.get_selected_entry()
-                    cli.sln_remove(sln.name, project_file(selection.value))
-                    solution.reload()
+                    local prompt ="Delete " .. selection.value ..  " from " .. sln.name .. "?"
+                    require "dotnet.confirmation".open({
+                        prompt_title = "Delete Project",
+                        prompt = {prompt},
+                        on_close = function(answer)
+                            if answer == "yes" then
+                                cli.sln_remove(sln.name, project_file(selection.value))
+                                solution.load()
+                            end
+                        end
+                    })
                 end
             }
         },
