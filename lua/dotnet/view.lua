@@ -46,18 +46,16 @@ function M.output(cmd)
     local function on_output(_, data, _)
         if data then
             for _, line in ipairs(data) do
-                if line ~= "" then
+                if line ~= "" and line ~= " " then
                     -- Replace carriage return (^M) with nothing
                     -- Is this only on windows??
                     line = string.gsub(line, "\r", "")
                     -- Trim leading and trailing whitespace
                     line = line:gsub("^%s+", ""):gsub("%s+$", "")
                     -- Add indentation
-                    if line ~= " " and line ~= "" then
-                        line = " " .. line
-                    end
-                    vim.api.nvim_buf_set_lines(bufnr, -1, -1, false, {line})
+                    line = " " .. line
                 end
+                vim.api.nvim_buf_set_lines(bufnr, -1, -1, false, {line})
             end
         end
 
