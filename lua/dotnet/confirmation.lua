@@ -34,7 +34,19 @@ function M.open(opts)
     -- set_view(win)
 
     vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, prompt)
-    vim.api.nvim_buf_set_lines(bufnr, 1, -1, false, {"", " (Y)es / (N)o"})
+    vim.api.nvim_buf_set_lines(bufnr, 1, -1, false, {"", " (Y)es / (N)o "})
+
+    local last_line = vim.api.nvim_buf_line_count(bufnr)
+    local last_col = #vim.api.nvim_buf_get_lines(bufnr, last_line - 1, last_line, false)[1]
+    vim.api.nvim_win_set_cursor(win, {last_line, last_col})
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'h', '<nop>', { noremap = true, silent = true })
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'j', '<nop>', { noremap = true, silent = true })
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'k', '<nop>', { noremap = true, silent = true })
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'l', '<nop>', { noremap = true, silent = true })
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<Up>', '<nop>', { noremap = true, silent = true })
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<Down>', '<nop>', { noremap = true, silent = true })
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<Left>', '<nop>', { noremap = true, silent = true })
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<Right>', '<nop>', { noremap = true, silent = true })
     vim.bo[bufnr].modifiable = false
 
     local function close(answer)
