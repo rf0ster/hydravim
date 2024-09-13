@@ -19,7 +19,7 @@ local close_to_startup = function()
 end
 
 local toggle_terminal = function()
-	require"toggleterm"
+	require "toggleterm"
 	vim.cmd[[ToggleTerm]]
 end
 
