@@ -11,12 +11,18 @@ function M.last_cmd()
 end
 
 function M.open()
+    local sln = require "dotnet.solution".get()
+    if not sln then
+        return
+    end
+
     local actions_state = require "telescope.actions.state"
     local actions = require "telescope.actions"
     local view = require "dotnet.view"
 
     view.picker({
-        prompt_title = "History",
+        prompt_title = sln.name,
+        results_title = "History",
         items = M.cmds,
         maps = {
             {
