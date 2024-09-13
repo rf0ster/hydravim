@@ -22,4 +22,4 @@ require("lualine").setup({
 	},
 })
 
--- vim.cmd[[Startup display]]
+vim.cmd[[Startup display]]

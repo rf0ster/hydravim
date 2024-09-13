@@ -9,7 +9,7 @@ return {
     },
     config = function()
         require("neo-tree").setup {
-            auto_open = true,
+            auto_open = false,
             update_to_buf_dir = {
                 enable = true,
                 auto_open = true,
