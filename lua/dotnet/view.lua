@@ -15,7 +15,6 @@ end
 
 function M.output(cmd)
     require "dotnet.history".add_cmd(cmd)
-    print(cmd)
 
 	local width = math.floor(vim.o.columns * 0.8)
 	local height = math.floor(vim.o.lines * 0.8)
@@ -32,8 +31,7 @@ function M.output(cmd)
         col = col,
         style = "minimal",
         border = "double",
-        title = "Output",
-        title_pos = "left",
+        title = "Output - " .. cmd,
     })
 
     vim.wo[win].wrap = false

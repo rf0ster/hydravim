@@ -9,8 +9,10 @@ local projects = {}
 local projects_loaded = false
 
 local function add_project(project_name)
-    cli.sln_add(sln_file, project_name .. "/" .. project_name .. ".csproj")
+    local p_name = project_name .. '/' .. project_name .. ".csproj"
+    cli.sln_add(sln_file, p_name)
     M.load(sln_file)
+    vim.notify(p_name .. " added to " .. sln_name)
 end
 
 local commands = {

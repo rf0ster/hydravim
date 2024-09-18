@@ -1,36 +1,17 @@
-local togglefiles = function()
-	local minifiles = require"mini.files"
-	if not minifiles.close() then minifiles.open() end
-end
-
-local newwindow = function(window)
-	return function()
-		require "mini.files".close()
-		window()
-	end
-end
-
-local close_to_startup = function()
-	if #vim.api.nvim_list_wins() > 1 then
-		vim.cmd[[q! | Startup display]]
-	else
-		vim.cmd[[Startup display]]
-	end
-end
-
-local toggle_terminal = function()
-	require "toggleterm"
-	vim.cmd[[ToggleTerm]]
-end
 
 -- Telescope
-vim.keymap.set('n', '<leader>ff', newwindow(require('telescope.builtin').find_files), {})
-vim.keymap.set('n', '<leader>fg', newwindow(require('telescope.builtin').live_grep), {})
-vim.keymap.set('n', '<leader>fb', newwindow(require('telescope.builtin').buffers), {})
-vim.keymap.set('n', '<leader>fh', newwindow(require('telescope.builtin').help_tags), {})
+vim.keymap.set('n', '<leader>ff', ":lua require('telescope.builtin').find_files()<CR>", {})
+vim.keymap.set('n', '<leader>fg', ":lua require('telescope.builtin').live_grep()<CR>", {})
+vim.keymap.set('n', '<leader>fb', ":lua require('telescope.builtin').buffers()<CR>", {})
+vim.keymap.set('n', '<leader>fh', ":lua require('telescope.builtin').help_tags()<CR>", {})
 
--- Mini.Files
-vim.keymap.set('n', '<leader>e', togglefiles, { noremap = true, silent = true })
+-- NvimTree
+vim.keymap.set('n', '<leader>ee', ':NvimTreeToggle <CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>eo', ':NvimTreeOpen <CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>ec', ':NvimTreeClose <CR>', { noremap = true, silent = true })
+
+-- Previous buffer
+vim.keymap.set('n', '<leader>p', ':wincmd p<CR>', { noremap = true, silent = true })
 
 -- Mason
 vim.keymap.set('n', '<leader>m', ':Mason<CR>', { noremap = true, silent = true })
@@ -39,8 +20,12 @@ vim.keymap.set('n', '<leader>m', ':Mason<CR>', { noremap = true, silent = true }
 vim.keymap.set('n', '<leader>l', ':Lazy<CR>', { noremap = true, silent = true })
 
 -- Terminal
-vim.keymap.set('n', '<C-t>', toggle_terminal, { noremap = true, silent = true })
-vim.keymap.set('t', '<C-t>', toggle_terminal, { noremap = true, silent = true })
+local function toggle_lazy()
+    require("toggleterm")
+    vim.cmd[[ToggleTerm]]
+end
+vim.keymap.set('n', '<C-t>', '', { noremap = true, silent = true, callback = toggle_lazy })
+vim.keymap.set('t', '<C-t>', '', { noremap = true, silent = true, callback = toggle_lazy })
 
 -- dotnet
 vim.keymap.set('n', '<leader>db', ':lua require"dotnet.cli".build()<CR>', { noremap = true, silent = true })
@@ -51,7 +36,7 @@ vim.keymap.set('n', '<leader>dp', ':lua require"dotnet.projects".open()<CR>', { 
 vim.keymap.set('n', '<leader>ds', ':lua require"dotnet.solution".open()<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>dl', ':lua require"dotnet.history".run_last_cmd()<CR>', { noremap = true, silent = true })
 
--- recalling
+-- Recall
 vim.keymap.set('n', '<leader>rr', ':Recall<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<tab>', ':RecallForward<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<s-tab>', ':RecallBack<CR>', { noremap = true, silent = true })
@@ -59,10 +44,6 @@ vim.keymap.set('n', '<s-tab>', ':RecallBack<CR>', { noremap = true, silent = tru
 -- lspsaga
 vim.keymap.set('n', '<leader>t', ':Lspsaga finder<CR>', { noremap = true, silent = true })
 
--- remaps, not sure if this is good practice, but nice to have for laptop where ctrl key is not remapped :(
-vim.keymap.set('n', '<leader>q', close_to_startup, { noremap = true, silent = true })
-
-vim.api.nvim_create_user_command('Q', function()
-    vim.cmd('bp | bd #')
-end, {})
+-- Close buffer
+vim.keymap.set('n', '<leader>q', ':q!<CR>', { noremap = true, silent = true })
 

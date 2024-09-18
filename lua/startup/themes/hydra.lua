@@ -31,7 +31,7 @@ local settings = {
         title = "Basic Commands",
         margin = 5,
         content = {
-            { " File Browser", "lua if not require('mini.files').close() then require('mini.files').open() end", "<leader>e" },
+            { " File Explorer", "lua vim.cmd[[NvimTreeOpen]] vim.cmd[[bp]]", "<leader>ee" },
             { " Find File", "Telescope find_files", "<leader>ff" },
             { "󰍉 Find Word", "Telescope live_grep", "<leader>fg" },
             { " Plugins", "Lazy", "<leader>l" },
