@@ -35,6 +35,7 @@ vim.keymap.set('n', '<leader>dh', ':lua require"dotnet.history".open()<CR>', { n
 vim.keymap.set('n', '<leader>dp', ':lua require"dotnet.projects".open()<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>ds', ':lua require"dotnet.solution".open()<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>dl', ':lua require"dotnet.history".run_last_cmd()<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>dt', ':lua require"dotnet.test".open_test_window()<CR>', { noremap = true, silent = true })
 
 -- Recall
 vim.keymap.set('n', '<leader>rr', ':Recall<CR>', { noremap = true, silent = true })
