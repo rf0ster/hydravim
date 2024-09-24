@@ -1,15 +1,9 @@
 local M = {}
 
 -- Helper function to run a shell command and capture the output
+-- Using a wrapper function because I am have played around with different ways to run shell commands.
 local function shell_command(cmd)
-    local handle = io.popen(cmd)
-    if handle == nil then
-        return nil
-    end
-
-    local result = handle:read("*a")
-    handle:close()
-    return result
+    return vim.fn.systemlist(cmd)
 end
 
 local function add_flag(flag, value)
@@ -77,6 +71,10 @@ end
 function M.new_mvc(name, output)
     local cmd = "dotnet new mvc -n " .. name
     return shell_command(cmd .. add_flag("-o", output))
+end
+
+function M.test_list_all(target)
+    return shell_command("dotnet test --list-tests" .. add_target(target))
 end
 
 return M

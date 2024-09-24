@@ -126,7 +126,7 @@ function M.load(sln_file_path)
 
     local result = require "dotnet.cli" .sln_list(sln_file)
     if result ~= nil then
-        for project in result:gmatch("[^\r\n]+") do
+        for _, project in ipairs(result) do
             local project_name = project:match("([^/\\]+%.csproj)$")
             if project_name then
                 table.insert(projects, {
