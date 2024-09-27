@@ -19,14 +19,6 @@ vim.keymap.set('n', '<leader>m', ':Mason<CR>', { noremap = true, silent = true }
 -- Lazy
 vim.keymap.set('n', '<leader>l', ':Lazy<CR>', { noremap = true, silent = true })
 
--- Terminal
-local function toggle_lazy()
-    require("toggleterm")
-    vim.cmd[[ToggleTerm]]
-end
-vim.keymap.set('n', '<C-t>', '', { noremap = true, silent = true, callback = toggle_lazy })
-vim.keymap.set('t', '<C-t>', '', { noremap = true, silent = true, callback = toggle_lazy })
-
 -- dotnet
 vim.keymap.set('n', '<leader>db', ':lua require"dotnet.cli".build()<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>dc', ':lua require"dotnet.cli".clean()<CR>', { noremap = true, silent = true })
