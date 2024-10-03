@@ -43,38 +43,10 @@ local settings = {
         default_color = "",
         oldfiles_amount = 0,
     },
-    footer_2 = {
-        type = "text",
-        content = require("startup.functions").packer_plugins(),
-        oldfiles_directory = false,
-        align = "center",
-        fold_section = false,
-        title = "",
-        margin = 5,
-        highlight = "TSString",
-        default_color = "#FFFFFF",
-        oldfiles_amount = 10,
-    },
-
-    options = {
-        after = function()
-            require("startup.utils").oldfiles_mappings()
-        end,
-        mapping_keys = true,
-        cursor_column = 0.5,
-        empty_lines_between_mappings = true,
-        disable_statuslines = true,
-        paddings = { 2, 2, 2, 2, 2, 2, 2 },
-    },
-    colors = {
-        background = "#1f2227",
-        folded_section = "#56b6c2",
-    },
     parts = {
         "header",
         "header_2",
         "body",
-        "footer_2",
     },
 }
 return settings
