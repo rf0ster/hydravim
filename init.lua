@@ -5,7 +5,7 @@ require("recall")
 vim.cmd("colorscheme cyberdream")
 
 local sln_name = function()
-    local sln_info = require("dotnet.solution").get()
+    local sln_info = require("dotnet.solution_manager").get_solution()
     if sln_info then
         return sln_info.name
 	end
@@ -22,4 +22,4 @@ require("lualine").setup({
 	},
 })
 
-vim.cmd[[Startup display]]
+--vim.cmd[[Startup display]]

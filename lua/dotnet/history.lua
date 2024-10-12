@@ -1,26 +1,21 @@
+-- Tracks a history of commands that have been run for a single session.
 local M = {
     cmds = {}
 }
 
+-- Adds a command to the history.
 function M.add_cmd(cmd)
     table.insert(M.cmds, 1, cmd)
 end
 
-function M.last_cmd()
-    return M.cmds[1]
-end
-
+-- Opens a picker with the command history.
 function M.open()
-    local sln = require "dotnet.solution".get()
+    local sln = require "dotnet.solution_manager".get_solution()
     if not sln then
         return
     end
 
-    local actions_state = require "telescope.actions.state"
-    local actions = require "telescope.actions"
-    local view = require "dotnet.view"
-
-    view.picker({
+    require "dotnet.view".picker({
         prompt_title = sln.name,
         results_title = "History",
         items = M.cmds,
@@ -29,19 +24,19 @@ function M.open()
                 mode = "n",
                 key = "<CR>",
                 fn = function(prompt_bufnr)
-                    local selection = actions_state.get_selected_entry()
-                    actions.close(prompt_bufnr)
-                    view.output(selection.value)
+                    local selection = require "telescope.actions.state".get_selected_entry()
+                    require "telescope.actions".close(prompt_bufnr)
+                    require "dotnet.output".run_cmd(selection.value)
                 end
             }
         }
     })
 end
 
+-- Runs the last command in the history.
 function M.run_last_cmd()
-    local cmd = M.last_cmd()
-    if cmd then
-        require "dotnet.view".output(cmd)
+    if M.cmds[1] then
+        require "dotnet.output".run_cmd(M.cmds[1])
     end
 end
 

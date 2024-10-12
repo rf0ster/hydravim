@@ -1,23 +1,30 @@
+local dotnet_solution_manager = require "dotnet.solution_manager"
+local dotnet_confirmations = require "dotnet.confirmation"
+local dotnet_view = require "dotnet.view"
+local dotnet_cli = require "dotnet.cli"
+local telescope_actions_state = require "telescope.actions.state"
+local telescope_actions = require "telescope.actions"
+
 local M = {}
 
 function M.open()
-    local solution = require "dotnet.solution"
-    local sln = solution.get() or solution.load()
-    if not sln then
+    local sln_info = dotnet_solution_manager.get_solution()
+    if not sln_info then
         return
     end
 
-    if not sln.projects_loaded then
+    local sln_projects = dotnet_solution_manager.get_projects()
+    if not sln_projects then
         return
     end
 
     local projects = {}
-    for _, project in ipairs(sln.projects) do
+    for _, project in ipairs(sln_projects) do
         table.insert(projects, project.name)
     end
 
     local function project_file(proj_name)
-        for _, project in ipairs(sln.projects) do
+        for _, project in ipairs(sln_projects) do
             if project.name == proj_name then
                 return project.file
             end
@@ -26,12 +33,9 @@ function M.open()
         return nil
     end
 
-    local actions_state = require "telescope.actions.state"
-    local actions = require "telescope.actions"
-    local cli = require "dotnet.cli"
 
-    require "dotnet.view".picker({
-        prompt_title = sln.name,
+    dotnet_view.picker({
+        prompt_title = sln_info.name,
         results_title = "Projects",
         items = projects,
         maps = {
@@ -39,8 +43,8 @@ function M.open()
                 mode = "n",
                 key = "<CR>",
                 fn = function (prompt_buffrn)
-                    local selection = actions_state.get_selected_entry()
-                    actions.close(prompt_buffrn)
+                    local selection = telescope_actions_state.get_selected_entry()
+                    telescope_actions.close(prompt_buffrn)
                     vim.api.nvim_command("e " .. project_file(selection.value))
                 end
             },
@@ -48,39 +52,39 @@ function M.open()
                 mode = "n",
                 key = "b",
                 fn = function()
-                    local selection = actions_state.get_selected_entry()
-                    cli.build(project_file(selection.value))
+                    local selection = telescope_actions_state.get_selected_entry()
+                    dotnet_cli.build(project_file(selection.value))
                 end
             },
             {
                 mode = "n",
                 key = "c",
                 fn = function()
-                    local selection = actions_state.get_selected_entry()
-                    cli.clean(project_file(selection.value))
+                    local selection = telescope_actions_state.get_selected_entry()
+                    dotnet_cli.clean(project_file(selection.value))
                 end
             },
             {
                 mode = "n",
                 key = "r",
                 fn = function()
-                    local selection = actions_state.get_selected_entry()
-                    cli.restore(project_file(selection.value))
+                    local selection = telescope_actions_state.get_selected_entry()
+                    dotnet_cli.restore(project_file(selection.value))
                 end
             },
             {
                 mode = "n",
                 key = "d",
                 fn = function()
-                    local selection = actions_state.get_selected_entry()
-                    local prompt ="Delete " .. selection.value ..  " from " .. sln.name .. "?"
-                    require "dotnet.confirmation".open({
+                    local selection = telescope_actions_state.get_selected_entry()
+                    local prompt ="Delete " .. selection.value ..  " from " .. sln_info.name .. "?"
+                    dotnet_confirmations.open({
                         prompt_title = "Delete Project",
                         prompt = {prompt},
                         on_close = function(answer)
                             if answer == "yes" then
-                                cli.sln_remove(sln.name, project_file(selection.value))
-                                solution.load()
+                                dotnet_cli.sln_remove(sln_info.name, project_file(selection.value))
+                                dotnet_solution_manager.load_projects()
                             end
                         end
                     })

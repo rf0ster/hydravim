@@ -1,10 +1,8 @@
-local M = {
-    file = nil,
-    name = nil,
-    projects = nil,
-}
+local M = { }
 
-local cli = require "dotnet.cli"
+local sln_file = nil
+local sln_name = nil
+local sln_projects = nil
 
 -- Locates a file on disk based on a pattern
 -- @param match The pattern to match
@@ -28,32 +26,37 @@ local function locate_file(match, depth)
     return file
 end
 
--- Load the solution file and cache the projects
+-- Load the solution file 
 -- @param sln_file_path The path to the solution file
 function M.load_solution(sln_file_path)
     if sln_file_path then
-        M.file = locate_file(sln_file_path)
+        sln_file = locate_file(sln_file_path)
     else
-        M.file = locate_file('%.sln$', 1)
+        sln_file = locate_file('%.sln$', 1)
     end
 
-    if M.file then
-        M.name = M.file:match("([^/\\]+%.sln)$")
+    if sln_file then
+        sln_name = sln_file:match("([^/\\]+%.sln)$")
     end
+
+    return {
+        name = sln_name,
+        file = sln_file,
+    }
 end
 
 -- Loads the projects for the solution.
 -- If there is no solution loaded in the module, it will load the solution first.
 function M.load_projects()
-    if not M.file then
+    if not sln_file then
         M.load_solution()
     end
 
-    if not M.file then
+    if not sln_file then
         return
     end
 
-    local result = cli.sln_list(M.file)
+    local result = require "dotnet.cli".sln_list(sln_file)
     if result == nil then
         return
     end
@@ -69,14 +72,16 @@ function M.load_projects()
             })
         end
     end
-    M.projects = projects
+    sln_projects = projects
+
+    return sln_projects
 end
 
 -- Returns a table of the list of tests found in a given project files.
 -- @param project_file The path to the project file
 -- @return A table of the list of tests found in the project file
 function M.load_tests(project_file)
-    local output = cli.test_list_all(project_file)
+    local output = require "dotnet.cli".test_list_all(project_file)
     if not output then
         return {}
     end
@@ -92,6 +97,37 @@ function M.load_tests(project_file)
     end
 
     return tests
+end
+
+-- Returns the solution information.
+-- If there is no solution loaded in the module, it will load the solution first.
+-- @return The solution information
+-- @field name The name of the solution
+-- @field file The path to the solution file
+function M.get_solution()
+    if not sln_file then
+        M.load_solution()
+    end
+
+    if not sln_file then
+        return nil
+    end
+
+    return {
+        name = sln_name,
+        file = sln_file,
+    }
+end
+
+-- Returns the projects for the solution.
+-- If there are no projects loaded in the module, it will load the projects first.
+-- @return A table of the projects for the solution
+function M.get_projects()
+    if not sln_projects then
+        M.load_projects()
+    end
+
+    return sln_projects
 end
 
 return M
