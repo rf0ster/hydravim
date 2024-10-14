@@ -1,4 +1,4 @@
-local M = { }
+local M = {}
 
 local sln_file = nil
 local sln_name = nil
@@ -68,11 +68,28 @@ function M.load_projects()
             table.insert(projects, {
                 file = project_file,
                 name = project_name,
-                tests = M.load_tests(project_file)
             })
         end
     end
     sln_projects = projects
+
+    return sln_projects
+end
+
+-- Loads the tests for all projects in the solution.
+-- If there are no projects loaded in the module, it will load the projects first.
+function M.load_tests_all()
+    if not sln_projects then
+        M.load_projects()
+    end
+
+    if not sln_projects then
+        return
+    end
+
+    for _, project in ipairs(sln_projects) do
+        project.tests = M.load_tests(project.file)
+    end
 
     return sln_projects
 end

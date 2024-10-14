@@ -10,12 +10,12 @@ end
 
 -- Opens a picker with the command history.
 function M.open()
-    local sln = require "dotnet.solution_manager".get_solution()
+    local sln = require "dotnet.solution".get_solution()
     if not sln then
         return
     end
 
-    require "dotnet.view".picker({
+    require "dotnet.picker".picker({
         prompt_title = sln.name,
         results_title = "History",
         items = M.cmds,

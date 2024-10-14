@@ -1,19 +1,19 @@
-local dotnet_solution_manager = require "dotnet.solution_manager"
-local dotnet_confirmations = require "dotnet.confirmation"
-local dotnet_view = require "dotnet.view"
-local dotnet_cli = require "dotnet.cli"
-local telescope_actions_state = require "telescope.actions.state"
-local telescope_actions = require "telescope.actions"
-
 local M = {}
 
 function M.open()
-    local sln_info = dotnet_solution_manager.get_solution()
+    local telescope_actions_state = require "telescope.actions.state"
+    local telescope_actions = require "telescope.actions"
+    local dotnet_confirmation = require "dotnet.confirmation"
+    local dotnet_solution = require "dotnet.solution"
+    local dotnet_picker = require "dotnet.picker"
+    local dotnet_cli = require "dotnet.cli"
+
+    local sln_info = dotnet_solution.get_solution()
     if not sln_info then
         return
     end
 
-    local sln_projects = dotnet_solution_manager.get_projects()
+    local sln_projects = dotnet_solution.get_projects()
     if not sln_projects then
         return
     end
@@ -34,7 +34,7 @@ function M.open()
     end
 
 
-    dotnet_view.picker({
+    dotnet_picker.picker({
         prompt_title = sln_info.name,
         results_title = "Projects",
         items = projects,
@@ -78,13 +78,13 @@ function M.open()
                 fn = function()
                     local selection = telescope_actions_state.get_selected_entry()
                     local prompt ="Delete " .. selection.value ..  " from " .. sln_info.name .. "?"
-                    dotnet_confirmations.open({
+                    dotnet_confirmation.open({
                         prompt_title = "Delete Project",
                         prompt = {prompt},
                         on_close = function(answer)
                             if answer == "yes" then
                                 dotnet_cli.sln_remove(sln_info.name, project_file(selection.value))
-                                dotnet_solution_manager.load_projects()
+                                dotnet_solution.load_projects()
                             end
                         end
                     })

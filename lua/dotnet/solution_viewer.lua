@@ -1,7 +1,7 @@
 local M = {}
 
 function M.open()
-    local dotnet_solution_manager = require "dotnet.solution_manager"
+    local dotnet_solution_manager = require "dotnet.solution"
     local dotnet_cli = require "dotnet.cli"
 
     local sln_info = dotnet_solution_manager.get_solution()
@@ -94,7 +94,7 @@ function M.open()
         table.insert(results, command.name)
     end
 
-    require "dotnet.view".picker({
+    require "dotnet.picker".picker({
         prompt_title = sln_info.name,
         results_title = "Options",
         finder = require "telescope.finders".new_table {
