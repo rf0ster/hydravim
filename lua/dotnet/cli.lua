@@ -1,5 +1,7 @@
-local dotnet_output = require "dotnet.output"
 local M = {}
+
+-- Tracks a history of commands that have been run for a single session.
+local history = {}
 
 -- Helper function to run a shell command and capture the output
 -- Using a wrapper function because I am have played around with different ways to run shell commands.
@@ -57,20 +59,60 @@ function M.test_list_all(target)
     return shell_command("dotnet test --list-tests" .. add_target(target))
 end
 
+-- Runs a command and displays the output in a new window.
+-- Stores the command in the history.
+-- param cmd: The command to run.
+local function run_cmd(cmd)
+    table.insert(history, 1, cmd)
+    require "dotnet.output".run_cmd(cmd)
+end
+
 function M.restore(target)
-    return dotnet_output.run_cmd("dotnet restore" .. add_target(target))
+    return run_cmd("dotnet restore" .. add_target(target))
 end
 
 function M.build(target)
-    return dotnet_output.run_cmd("dotnet build" .. add_target(target))
+    return run_cmd("dotnet build" .. add_target(target))
 end
 
 function M.clean(target)
-    return dotnet_output.run_cmd("dotnet clean" .. add_target(target))
+    return run_cmd("dotnet clean" .. add_target(target))
 end
 
 function M.mstest(target)
-    return dotnet_output.run_cmd("dotnet test" .. add_target(target))
+    return run_cmd("dotnet test" .. add_target(target))
+end
+
+-- Opens a picker with the command history.
+function M.open_history()
+    local sln = require "dotnet.solution".get_solution()
+    if not sln then
+        return
+    end
+
+    require "dotnet.picker".picker({
+        prompt_title = sln.name,
+        results_title = "History",
+        items = history,
+        maps = {
+            {
+                mode = "n",
+                key = "<CR>",
+                fn = function(prompt_bufnr)
+                    local selection = require "telescope.actions.state".get_selected_entry()
+                    require "telescope.actions".close(prompt_bufnr)
+                    require "dotnet.output".run_cmd(selection.value)
+                end
+            }
+        }
+    })
+end
+
+-- Runs the last command in the history.
+function M.run_last_cmd()
+    if history[1] then
+        require "dotnet.output".run_cmd(history[1])
+    end
 end
 
 return M

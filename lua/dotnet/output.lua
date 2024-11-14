@@ -18,8 +18,6 @@ end
 -- Runs a command and displays the output in a new window.
 -- param cmd: The command to run.
 function M.run_cmd(cmd)
-    require "dotnet.history".add_cmd(cmd)
-
 	local width = math.floor(vim.o.columns * 0.8)
 	local height = math.floor(vim.o.lines * 0.8)
 	local row = math.floor((vim.o.lines - height) / 2)

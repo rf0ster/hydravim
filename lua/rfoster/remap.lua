@@ -23,10 +23,10 @@ vim.keymap.set('n', '<leader>l', ':Lazy<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>db', ':lua require"dotnet.cli".build()<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>dc', ':lua require"dotnet.cli".clean()<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>dr', ':lua require"dotnet.cli".restore()<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>dh', ':lua require"dotnet.history".open()<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>dh', ':lua require"dotnet.cli".open_history()<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>dl', ':lua require"dotnet.cli".run_last_cmd()<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>dp', ':lua require"dotnet.projects".open()<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>ds', ':lua require"dotnet.solution_viewer".open()<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>dl', ':lua require"dotnet.history".run_last_cmd()<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>dt', ':lua require"dotnet.test".open_test_window()<CR>', { noremap = true, silent = true })
 
 -- Recall
