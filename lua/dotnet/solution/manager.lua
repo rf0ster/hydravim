@@ -1,18 +1,18 @@
 local M = {}
 
 function M.open()
-    local dotnet_solution_manager = require "dotnet.solution"
-    local dotnet_cli = require "dotnet.cli"
+    local solution = require "dotnet.solution"
+    local cli = require "dotnet.cli"
 
-    local sln_info = dotnet_solution_manager.get_solution()
+    local sln_info = solution.get_solution()
     if not sln_info then
         return
     end
 
     local function add_project(project_name)
         local p_name = project_name .. '/' .. project_name .. ".csproj"
-        dotnet_cli.sln_add(sln_info.file, p_name)
-        dotnet_solution_manager.load_projects()
+        cli.sln_add(sln_info.file, p_name)
+        solution.load_projects()
         vim.notify(p_name .. " added to " .. sln_info.name)
     end
 
@@ -20,25 +20,25 @@ function M.open()
         {
             name = "Build",
             on_execute = function()
-                dotnet_cli.build(sln_info.file)
+                cli.build(sln_info.file)
             end
         },
         {
             name = "Clean",
             on_execute = function()
-                dotnet_cli.clean(sln_info.file)
+                cli.clean(sln_info.file)
             end
         },
         {
             name = "Restore",
             on_execute = function()
-                dotnet_cli.restore(sln_info.file)
+                cli.restore(sln_info.file)
             end
         },
         {
             name = "Test",
             on_execute = function()
-                dotnet_cli.mstest(sln_info.file)
+                cli.mstest(sln_info.file)
             end
         },
         {
@@ -51,7 +51,7 @@ function M.open()
             name = "New console",
             on_execute = function()
                 local project_name = vim.fn.input("Project name: ")
-                dotnet_cli.new_console(project_name)
+                cli.new_console(project_name)
                 add_project(project_name)
             end
         },
@@ -59,7 +59,7 @@ function M.open()
             name = "New classlib",
             on_execute = function()
                 local project_name = vim.fn.input("Project name: ")
-                dotnet_cli.new_classlib(project_name)
+                cli.new_classlib(project_name)
                 add_project(project_name)
             end
         },
@@ -67,7 +67,7 @@ function M.open()
             name = "New web",
             on_execute = function()
                 local project_name = vim.fn.input("Project name: ")
-                dotnet_cli.new_web(project_name)
+                cli.new_web(project_name)
                 add_project(project_name)
             end
         },
@@ -75,7 +75,7 @@ function M.open()
             name = "New mvc",
             on_execute = function()
                 local project_name = vim.fn.input("Project name: ")
-                dotnet_cli.new_mvc(project_name)
+                cli.new_mvc(project_name)
                 add_project(project_name)
             end
         },
@@ -83,7 +83,7 @@ function M.open()
             name = "New mstest",
             on_execute = function()
                 local project_name = vim.fn.input("Project name: ")
-                dotnet_cli.new_mstest(project_name)
+                cli.new_mstest(project_name)
                 add_project(project_name)
             end
         }
